@@ -63,12 +63,12 @@ public class Main {
         //region 5. Vytvoř alespoň tři objednávky pro stůj číslo 15 a jednu pro stůj číslo 2.
         Order order1 = new Order(15, LocalTime.of(10, 20), rizek,
                 2, waiterLenkaR_1, "nothing");
-        Order order2 = new Order(15, LocalTime.of(14, 25), pstruh,
-                1, waiterJaroslavO_2, "nothing");
-        Order order3 = new Order(15, LocalTime.of(14, 10), hranolky,
-                3, waiterLenkaR_1, "extra plate for a child");
+        Order order2 = new Order(15, LocalTime.of(12, 25), pstruh,
+                1, waiterJaroslavO_2, LocalTime.of(13, 00), "nothing");
+        Order order3 = new Order(15, LocalTime.of(12, 10), hranolky,
+                3, waiterLenkaR_1,  LocalTime.of(13, 10),"extra plate for a child");
         Order order4 = new Order(3, LocalTime.of(12, 10), rizek,
-                5, waiterJaroslavO_2, LocalTime.of(13, 15), "nothing");
+                5, waiterJaroslavO_2, LocalTime.of(13, 00), "nothing");
         Order order5 = new Order(15, LocalTime.of(12, 25), pancakes,
                 3, waiterLeopoldS_3, LocalTime.of(12, 45), "nothing");
         Order order6 = new Order(2, LocalTime.of(13, 10), rizek,
@@ -172,8 +172,18 @@ public class Main {
         System.out.println(gap);
 
 
-        System.out.println("AVERAGE TIME OF ORDER IN CERTAIN TIMEFRAME: ");
-        orderListObject.AverageOrdersTimeInSpecTimeframe(orderList, LocalTime.of(7, 00), LocalTime.now());
+        System.out.println("AVERAGE TIME OF PROCESSING ORDER IN A GIVEN TIMEFRAME: ");
+        testList.add(order1);
+        testList.add(order2);
+        testList.add(order3);
+        testList.add(order4);
+        testList.add(order5);
+        testList.add(order6);
+        try {
+            orderListObject.AverageOrdersTimeInSpecTimeframe(testList, LocalTime.of(6, 00), LocalTime.now());
+        } catch (OrdersException e) {
+            System.err.println(e.getLocalizedMessage());
+        }
 
 
         //region READ / WRITE TO FILES

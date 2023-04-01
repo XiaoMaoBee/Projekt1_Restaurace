@@ -2,6 +2,7 @@ package com.engeto.projekt1.restaurace;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -16,7 +17,7 @@ public class OrderList {
         String record = "";
         for (Order order : list) {
             if (cisloPolozky == 1 && order.getTableNum() == tableNum) {
-               System.out.println("** Objednávky pro stůl č.  " + order.getTableNum() + " **\n****" + "\n");
+                System.out.println("** Objednávky pro stůl č.  " + order.getTableNum() + " **\n****" + "\n");
             }
             if (cisloPolozky == list.size()) {
                 System.out.println("*******");
@@ -40,6 +41,8 @@ public class OrderList {
 
     //region  6  List of dishes which were ordered today            OK
     // , no matter how many times ordered
+
+
     public Set<Dish> getListOfTodayOrderedDishes(List<Order> list) {
         System.out.println("TODAY ORDERED DISHES: \n");
         Set<Dish> todaysDishes = new HashSet<>();
@@ -56,30 +59,34 @@ public class OrderList {
 
 
     //region 5  Count average time of orders for a specific timeframe Průměrnou dobu zpracování objednávek, které byly zadány v určitém časovém období.
-    public String AverageOrdersTimeInSpecTimeframe(List<Order> list, LocalTime from, LocalTime to) {
+    public String AverageOrdersTimeInSpecTimeframe(List<Order> list, LocalTime from, LocalTime to) throws OrdersException {
         int numOfOrders = 0;
         long sumOfTimeOfOrder = 0;
+        long sumOfDurationInMin = 0;
 
         for (Order order : list) {
+            Duration duration;
 
-            if (order.getOrderTime().toNanoOfDay() >= from.toNanoOfDay()
-                    && order.getFulfilmentTime().toNanoOfDay() <= to.toNanoOfDay()
-                    && order.getFulfilmentTime().toNanoOfDay() > from.toNanoOfDay()) {
-                sumOfTimeOfOrder += to.toNanoOfDay() - from.toNanoOfDay();
+            if ((order.getOrderTime().equals(from) || order.getOrderTime().isAfter(from))
+                    && (order.getFulfilmentTime().equals(to) || order.getFulfilmentTime().isBefore(to))
+                    && (order.getFulfilmentTime().isAfter(from))) {
+                duration = Duration.between(order.getOrderTime(), order.getFulfilmentTime());
+                System.out.println("objednávka id: " + order.getOrderId() + ", čas objednávky: "
+                        + order.getOrderTime() + " konec: " + order.getFulfilmentTime());
+                sumOfDurationInMin += duration.toMinutes();
                 numOfOrders++;
             }
         }
-        long averageNanoTime = sumOfTimeOfOrder / numOfOrders;
-        double seconds = (double) averageNanoTime / 1_000_000_000.0;
-        double minRest = seconds % 60;
-        double minuty = seconds / 60 - minRest;
-//        double hoursRest = minuty % 60;
-//        double hours = minuty / 60 - hoursRest;
+        try {
+            int averageTime = (int) sumOfDurationInMin / numOfOrders;
+            String result = "Average time of fulfilling orders is " + averageTime + " minutes.";
+            System.out.println(result);
+            return result;
 
-        String result = "Average time of fulfilling orders is " + minuty + " minutes.";
-
-        System.out.println(result);
-        return result;
+        } catch (ArithmeticException e) {
+            throw new OrdersException("No orders available in a given timeframe/" +
+                    " Dividing by zero is not possible/\n" + e.fillInStackTrace());
+        }
     }
 
     //endregion
@@ -132,7 +139,7 @@ public class OrderList {
                 finishedOrders.add(order);
                 finishedOrdersId.add(order.getOrderId());
             }
-                System.out.print(order.getOrderId() + " ");
+            System.out.print(order.getOrderId() + " ");
 
         }
         return finishedOrders;
@@ -218,9 +225,9 @@ public class OrderList {
         for (Order order : list) {
             System.out.println("Order Id: "
                     + order.getOrderId() + " ( "
-                    + " Title: " +order.getOrderedDish().getDishTitle()
-                    + " Waiter: " +order.getWaiter()
-                    + " Order Time: " +order.getOrderTime() +  ")" + " dish available");
+                    + " Title: " + order.getOrderedDish().getDishTitle()
+                    + " Waiter: " + order.getWaiter()
+                    + " Order Time: " + order.getOrderTime() + ")" + " dish available");
         }
 
     }
