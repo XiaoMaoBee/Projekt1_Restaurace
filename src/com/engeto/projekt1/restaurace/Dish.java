@@ -1,8 +1,6 @@
 package com.engeto.projekt1.restaurace;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Dish {
 
@@ -11,8 +9,6 @@ public class Dish {
     private BigDecimal price;
     private int preparationTime;
     private String dishPhoto;
-    private List<Photo> dishPhotos = new ArrayList<>();
-    private List<Dish> list = new ArrayList<>();
 
 
     public Dish(String title,CategoryDish dishCategory,
@@ -25,11 +21,9 @@ public class Dish {
     }
 
     public Dish(String dishTitle) {
-        this.dishTitle = dishTitle;
+    this(dishTitle,CategoryDish.DISH,BigDecimal.ZERO,0,"N/A");
     }
 
-    public Dish() {
-    }
     ///region GETTERS/SETTERS
 
     public String getDishTitle() {
@@ -73,10 +67,6 @@ public class Dish {
     }
     ///endregion
 
-
-    public void addPhotoToDish(Photo photo) {
-        dishPhotos.add(photo);
-    }
 
     @Override
     public String toString() {

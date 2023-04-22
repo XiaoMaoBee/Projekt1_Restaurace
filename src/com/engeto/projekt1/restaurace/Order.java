@@ -8,25 +8,27 @@ public class Order implements Comparable<Order>{
     private static int nextId = 1;
     private int orderId;
     private int tableNum;
-    private LocalDate date = LocalDate.now();
+    private LocalDate date;
     private LocalTime orderTime;
     private Dish orderedDish;
     private int numOfDishes;
     private Waiter waiter;
     private LocalTime fulfilmentTime;
+    private boolean isFinished;
     private String note;
-
 
 
     public Order(int orderId,int tableNum,LocalTime orderTime, Dish orderedDish,
                  int numOfDishes, Waiter waiter, LocalTime fulfilmentTime, String note) {
         this.orderId = orderId;
         this.tableNum = tableNum;
+        this.date = LocalDate.now();
         this.orderTime = orderTime;
         this.orderedDish = orderedDish;
         this.numOfDishes = numOfDishes;
         this.waiter = waiter;
         this.fulfilmentTime = fulfilmentTime;
+        this.isFinished = false;
         this.note = note;
     }
     public Order(int tableNum, LocalTime orderTime, Dish orderedDish,
@@ -82,6 +84,14 @@ public class Order implements Comparable<Order>{
         this.fulfilmentTime = fulfilmentTime;
     }
 
+    public boolean isFinished() {
+        return isFinished;
+    }
+
+    public void setFinished(boolean finished) {
+        isFinished = finished;
+    }
+
     public Waiter getWaiter() {
         return waiter;
     }
@@ -116,8 +126,9 @@ public class Order implements Comparable<Order>{
 
     ///endregion
 
-    public void setNowTime() {setFulfilmentTime(LocalTime.now());}
-
+    public void setNowTime() {
+        setFulfilmentTime(LocalTime.now());
+    }
 
     @Override
     public int compareTo(Order o) {

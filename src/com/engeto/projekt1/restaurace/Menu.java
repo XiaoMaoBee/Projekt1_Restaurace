@@ -2,22 +2,13 @@ package com.engeto.projekt1.restaurace;
 
 import java.io.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Menu{
 
-    private String menuName;
-
-    public Menu(String menuName) {
-        this.menuName = menuName;
+    public Menu() {
     }
-
-    public Menu() {}
-
-    private List<Dish> menu = new ArrayList<>();
-
 
     public void writeMenuInFile(List<Dish> list, String filename) throws OrdersException {
         try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(filename)))) {
@@ -36,17 +27,20 @@ public class Menu{
         }
     }
 
-    public void readMenuFromFile(String filename, String delimiter) throws OrdersException {
+    public void readMenuFromFile(String filename, List<Dish> menuList, String delimiter) throws OrdersException {
         try (Scanner scanner = new Scanner(new BufferedReader(new FileReader(filename)))) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                String[] items = line.split(";");
+                String[] items = line.split(delimiter);
                 Dish dish = new Dish(items[0],
                         CategoryDish.valueOf(items[1]),
                         new BigDecimal(items[2]),
                         Integer.parseInt(items[3]),
                         items[4]);
+
+                menuList.add(dish);
             }
+            System.out.println(menuList);
         } catch (FileNotFoundException e) {
             throw new OrdersException("File is broken or does not exists: file: "
                     + e.getLocalizedMessage());
@@ -57,10 +51,6 @@ public class Menu{
         }
     }
 
-
-    public void addDishFromDishList(Dish dish) {
-        menu.add(dish);
-    }
 
     public void checkDishAvailability(List<Dish> menu,Dish dish) {
         if (!menu.contains(dish)) {

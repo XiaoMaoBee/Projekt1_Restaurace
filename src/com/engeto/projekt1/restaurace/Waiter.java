@@ -2,21 +2,17 @@ package com.engeto.projekt1.restaurace;
 
 public class Waiter {
 
-    private String name;
+    private static int nextId = 1;
     private int id;
+    private String name;
 
-    public Waiter(String name,int id) {
-        this.name = name;
-        this.id = id;
-    }
+
     public Waiter(String name) {
-        this(name,0);
+        this.name = name;
+        this.id = nextId++;
     }
 
     ///region GETTERS/SETTERS
-
-
-
     public String getName() {
         return name;
     }
@@ -33,7 +29,6 @@ public class Waiter {
         this.id = id;
     }
     ///endregion
-
 
     @Override
     public String toString() {

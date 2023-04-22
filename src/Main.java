@@ -10,31 +10,28 @@ public class Main {
 
         OrderList orderListObject = new OrderList();
         DishList dishListObject = new DishList();
-        Menu menu = new Menu("Daily Menu");
+        Menu menu = new Menu();
         List<Dish> actualMenu = new ArrayList<>();
         List<Dish> dishList = new ArrayList<>();
         List<Order> orderList = new ArrayList<>();
         List<Waiter> waiterList = new ArrayList<>();
         List<Order> testList = new ArrayList<>();
-
         String gap = "\n\n\n";
 
-        //region 2. Přidej do systému dva číšníky a tři stoly s čísly 1, 2 a 15.
-        Waiter waiterLenkaR_1 = new Waiter("Lenka Rychlá", 1);
-        Waiter waiterJaroslavO_2 = new Waiter("Jaroslav Osmahlý", 2);
-        Waiter waiterLeopoldS_3 = new Waiter("Leopold Smažený", 3);
+
+
+        //region Přidej do systému dva číšníky a tři stoly s čísly 1, 2 a 15.
+        Waiter waiterLenkaR_1 = new Waiter("Lenka Rychlá");
+        Waiter waiterJaroslavO_2 = new Waiter("Jaroslav Osmahlý");
+        Waiter waiterLeopoldS_3 = new Waiter("Leopold Smažený");
 
         waiterList.add(waiterJaroslavO_2);
         waiterList.add(waiterLenkaR_1);
         waiterList.add(waiterLeopoldS_3);
 
-        Table table1 = new Table(1);
-        Table table2 = new Table(2);
-        Table table3 = new Table(3);
-        Table table15 = new Table(15);
         //endregion
 
-        //region 3. Vytvoř alespoň tři jídla
+        //region Vytvoř alespoň tři jídla
         Dish rizek = new Dish("Kuřecí řízek obalovaný 150g", CategoryDish.LUNCH, BigDecimal.valueOf(120),
                 20, "kureci-rizek-01.png");
         Dish hranolky = new Dish("Hranolky 100g", CategoryDish.SIDE_DISH, BigDecimal.valueOf(60),
@@ -53,24 +50,28 @@ public class Main {
         dishList.add(pancakes);
         //endregion
 
-        //region 4. První a třetí jídlo zařaď do aktuálního menu, druhé jídlo nikoli.
+        //region První a třetí jídlo zařaď do aktuálního menu, druhé jídlo nikoli.
         // Případné další můžeš zařadit dle potřeby.
         actualMenu.add(rizek);
         actualMenu.add(pstruh);
 
         //endregion
 
-        //region 5. Vytvoř alespoň tři objednávky pro stůj číslo 15 a jednu pro stůj číslo 2.
-        Order order1 = new Order(15, LocalTime.of(10, 20), rizek,
+        //region Vytvoř alespoň tři objednávky pro stůl číslo 15 a jednu pro stůj číslo 2.
+        Order order1 = new Order(15, LocalTime.now(), rizek,
                 2, waiterLenkaR_1, "nothing");
         Order order2 = new Order(15, LocalTime.of(12, 25), pstruh,
-                1, waiterJaroslavO_2, LocalTime.of(13, 00), "nothing");
+                1, waiterJaroslavO_2, LocalTime.of(13, 0), "nothing");
+        order2.setFinished(true);
         Order order3 = new Order(15, LocalTime.of(12, 10), hranolky,
                 3, waiterLenkaR_1,  LocalTime.of(13, 10),"extra plate for a child");
+        order3.setFinished(true);
         Order order4 = new Order(3, LocalTime.of(12, 10), rizek,
-                5, waiterJaroslavO_2, LocalTime.of(13, 00), "nothing");
+                5, waiterJaroslavO_2, LocalTime.of(13, 0), "nothing");
+        order4.setFinished(true);
         Order order5 = new Order(15, LocalTime.of(12, 25), pancakes,
                 3, waiterLeopoldS_3, LocalTime.of(12, 45), "nothing");
+        order5.setFinished(true);
         Order order6 = new Order(2, LocalTime.of(13, 10), rizek,
                 1, waiterJaroslavO_2, "nothing");
         Order order7 = new Order(15, LocalTime.of(13, 20), pizza30,
@@ -87,13 +88,17 @@ public class Main {
                 1, waiterJaroslavO_2, "nothing");
         Order order13 = new Order(3, LocalTime.of(7, 20), rizek,
                 1, waiterJaroslavO_2, LocalTime.now(), "nothing");
+        order13.setFinished(true);
         Order order14 = new Order(3, LocalTime.of(7, 20), rizek,
                 1, waiterJaroslavO_2, LocalTime.now(), "nothing");
-
+        order14.setFinished(true);
+        Order order15 = new Order(3, LocalTime.of(7, 20), rizek,
+                1, waiterJaroslavO_2, LocalTime.now(), "nothing");
+        order15.setFinished(true);
 
         //endregion
 
-        //region 6. Vyzkoušej přidat objednávku jídla, které není v menu — aplikace musí ohlásit chybu.
+        //region Vyzkoušej přidat objednávku jídla, které není v menu — aplikace musí ohlásit chybu.
 
         System.out.println("Aktuální menu: \n" + actualMenu + "\n");
         System.out.println("6. Vyzkoušej přidat objednávku jídla, které není v menu — aplikace musí ohlásit chybu.\n");
@@ -112,14 +117,10 @@ public class Main {
         orderListObject.addOrderToOrderList(order12, actualMenu, orderList);
         orderListObject.addOrderToOrderList(order13, actualMenu, orderList);
         orderListObject.addOrderToOrderList(order14, actualMenu, orderList);
+        orderListObject.addOrderToOrderList(order15, actualMenu, orderList);
         System.out.println(gap);
 
-
-
-
-        //System.out.println("PPPPPPPPPPPPPPPPPPPPPPPPPPP" + orderList);
-
-        System.out.println("ORDERS WITH AVAILABLE DISH: \n");
+        System.out.println("VALID ORDERS WITH AVAILABLE DISH: \n");
         orderListObject.printBriefOrderList(orderList);
 
 
@@ -131,25 +132,20 @@ public class Main {
                 orderListObject.countOngoingOrders(orderList));
 
         // List of finished orders
-
         System.out.println("\nFINISHED ORDERS: ");
-        orderListObject.FinishedOrders(orderList);
+        orderListObject.finishedOrders(orderList);
         System.out.println("\n" + gap);
 
-        // 3. Seřaď objednávky podle číšníka, nebo orderTime
-
+        // Seřaď objednávky podle číšníka, nebo orderTime
         System.out.println("\nSORTED ORDER LIST BY WAITER\n");
         orderListObject.sortOrdersByWaiter(orderList);
-        System.out.print("ORDERLIST PRINTED: \n"); orderListObject.printBriefOrderList(orderList);
+        System.out.print("ORDERLIST PRINTED: \n");
+        orderListObject.printBriefOrderList(orderList);
         System.out.println(gap);
 
         System.out.println("SORTED ORDER LIST BY ORDERTIME\n");
         orderListObject.sortOrdersByOrderTime(orderList);
         System.out.print("ORDERLIST PRINTED: \n"); orderListObject.printBriefOrderList(orderList);
-
-        // Change FulfilmentTime of order when closing order
-        // order1.setNowTime();
-        //  System.out.println(order1);
 
         // Check a dish availability
         System.out.println(gap);
@@ -157,13 +153,12 @@ public class Main {
         menu.checkDishAvailability(actualMenu, rizek);
         System.out.println(gap);
 
-        //System.out.println(orderList);
         System.out.println("LIST OF ORDERS FOR ONE TABLE: ");
         orderListObject.printOrdersForTable(orderList, 3);
         System.out.println(gap);
 
-
         System.out.println("LIST OF TODAY ORDERED DISHES: ");
+        System.out.println(orderListObject.getListOfTodayOrderedDishes(orderList));
         orderListObject.getListOfTodayOrderedDishes(orderList);
         System.out.println(gap);
 
@@ -180,13 +175,13 @@ public class Main {
         testList.add(order5);
         testList.add(order6);
         try {
-            orderListObject.AverageOrdersTimeInSpecTimeframe(testList, LocalTime.of(6, 00), LocalTime.now());
+            orderListObject.averageOrdersTimeInSpecTimeframe(
+                    testList, LocalTime.of(6, 0), LocalTime.now());
         } catch (OrdersException e) {
             System.err.println(e.getLocalizedMessage());
         }
 
-
-        //region READ / WRITE TO FILES
+        //region READ/WRITE FROM/TO FILES
 
         //WRITE ORDERS INTO A FILE
 
@@ -201,14 +196,14 @@ public class Main {
 
         System.out.println("READ ORDERS FROM FILE");
         try {
-            orderListObject.readOrdersFromFile("orders.txt", ";");//
+            orderListObject.readOrdersFromFile("orders.txt", ";", orderList);//
         } catch (OrdersException e) {
             System.err.println(e.getLocalizedMessage());
         }
-        //System.out.println(orderList);
 
 
         //WRITE MENU INTO A FILE
+        System.out.println("WRITE MENU INTO FILE");
         try {
             menu.writeMenuInFile(actualMenu, "menu.txt");
         } catch (OrdersException e) {
@@ -218,13 +213,10 @@ public class Main {
         //READ MENU FROM FILE
         System.out.println("READ MENU FROM FILE");
         try {
-            menu.readMenuFromFile("menu.txt", ";");
+            menu.readMenuFromFile("menu.txt", actualMenu, ";");
         } catch (OrdersException e) {
             System.err.println(e.getLocalizedMessage());
         }
-        System.out.println(actualMenu);
-
-
 
         //WRITE DISH LIST INTO A FILE
         try {
@@ -236,28 +228,13 @@ public class Main {
         //READ DISH LIST FROM FILE
         System.out.println("READ DISH LIST FROM FILE");
         try {
-            dishListObject.readDishListFromFile("dishes.txt", ";");
+            dishListObject.readDishListFromFile("dishes.txt", ";", dishList);
         } catch (OrdersException e) {
             System.err.println(e.getLocalizedMessage());
         }
 
-        System.out.println(dishList);
-
         //endregion
-
     }
-
-
-//        public static void addOrderToOrderList (Order order, List < Dish > actualMenu
-//                , List <Order> list) {
-//            if (actualMenu.contains(order.getOrderedDish())) {
-//                list.add(order);
-//            } else {
-//                System.out.println("Order Id: " + order.getOrderId() +
-//                        " ( " + order.getOrderedDish().getDishTitle() + ") dish N/A ... Order not accepted.\n ");
-//            }
-    //System.out.println(order);
-
 }
 
 
